@@ -1,0 +1,10 @@
+[workspace]
+members = ["crates/mdc-cli", "crates/mdc-core", "crates/mdc-rules"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["macos-deep-cleaner contributors"]
+license = "MIT"
+repository = "https://github.com/yourusername/macos-deep-cleaner"
