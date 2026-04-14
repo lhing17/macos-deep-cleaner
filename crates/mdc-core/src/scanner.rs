@@ -65,8 +65,8 @@ impl Scanner {
 
     fn matches_rule(&self, path: &Path, rule: &Rule) -> bool {
         if rule.patterns.is_empty() {
-            // 没有特定模式，匹配基目录本身
-            path == rule.base_dirs.iter().find(|b| path.starts_with(b)).unwrap_or(&PathBuf::new())
+            // 没有特定模式时，只匹配基目录本身
+            rule.base_dirs.iter().any(|b| path == b.as_path())
         } else {
             let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
             rule.patterns.iter().any(|p| name == p.as_str())
@@ -79,10 +79,10 @@ impl Scanner {
         } else if path.is_dir() {
             let mut total = 0u64;
             for entry in WalkDir::new(path).into_iter().filter_map(|e| e.ok()) {
-                if let Ok(meta) = entry.metadata() {
-                    if meta.is_file() {
-                        total += meta.len();
-                    }
+                if let Ok(meta) = entry.metadata()
+                    && meta.is_file()
+                {
+                    total += meta.len();
                 }
             }
             Some(total)
